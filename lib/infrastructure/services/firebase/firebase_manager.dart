@@ -46,6 +46,24 @@ class FirebaseManager {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getStreamWithWhereList({
+    required String collectionId,
+    required String whereId,
+    required Object? whereValue,
+  }) async* {
+    try {
+      final fireStore = FirebaseFirestore.instance;
+
+      yield* fireStore
+          .collection(collectionId)
+          .where(whereId, arrayContainsAny: [whereValue.toString()])
+          // .orderBy("date")
+          .snapshots();
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getStream({
     required String collectionId,
   }) async* {

@@ -38,7 +38,7 @@ class _BodyState extends State<Body> {
                         ? FirebaseManager().getStream(
                             collectionId: "trips",
                           )
-                        : FirebaseManager().getStreamWithWhere(
+                        : FirebaseManager().getStreamWithWhereList(
                             collectionId: "trips",
                             whereId: "acceptedUid",
                             whereValue: FirebaseAuth.instance.currentUser?.uid,
@@ -56,10 +56,13 @@ class _BodyState extends State<Body> {
                             ));
                       } else {
                         final data = (snapshot.data as QuerySnapshot).docs;
+                        print(data);
+                        print(FirebaseAuth.instance.currentUser?.uid);
+
                         return ListView.separated(
                           itemBuilder: (context, index) {
                             // Showing trips data in the list
-                            log(jsonEncode(data[index].data()));
+                            // log(jsonEncode(data[index].data()));
 
                             return TripItem(
                               id: data[index].id,
@@ -70,11 +73,13 @@ class _BodyState extends State<Body> {
                               date: data[index]["date"],
                               acceptedUid: data[index]["acceptedUid"],
                               isHomeScreen: false,
-                                      toBring: (data[index].data() as Map)["toBring"] ?? [],
-                                      itenary: (data[index].data() as Map)["itenary"] != null
-                                          ? Itenary.fromJson(
-                                              (data[index].data() as Map)["itenary"])
-                                          : null,
+                              toBring:
+                                  (data[index].data() as Map)["toBring"] ?? [],
+                              itenary: (data[index].data() as Map)["itenary"] !=
+                                      null
+                                  ? Itenary.fromJson(
+                                      (data[index].data() as Map)["itenary"])
+                                  : null,
                             );
                           },
                           itemCount: data.length,
