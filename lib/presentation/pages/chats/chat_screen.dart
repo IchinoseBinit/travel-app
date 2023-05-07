@@ -63,7 +63,7 @@ class ChatScreenState extends State<ChatScreen> {
           }
           try {
             // print(snapshot.data.runtimeType.);
-            final data = (snapshot.data as QuerySnapshot).docs;
+            final data = (snapshot.data as QuerySnapshot).docs.reversed.toList();
             print(data.length);
             return ListView.builder(
               padding: EdgeInsets.only(
