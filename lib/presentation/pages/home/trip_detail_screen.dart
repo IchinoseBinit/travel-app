@@ -21,7 +21,7 @@ class TripDetail extends StatelessWidget {
   final String description;
   final String title;
   final String date;
-  final String image;
+  final dynamic image;
   final List<dynamic> toBring;
   final Itenary? itenary;
 
@@ -59,7 +59,9 @@ class TripDetail extends StatelessWidget {
                           image: DecorationImage(
                             image: MemoryImage(
                               base64Decode(
-                                image,
+                                image.runtimeType == String
+                                    ? image
+                                    : (image as List).first,
                               ),
                             ), //
                             fit: BoxFit.cover,
@@ -212,7 +214,40 @@ class TripDetail extends StatelessWidget {
                             primary: false,
                           ),
                         ] else
-                          Center(child: Text("No Itenaries added"))
+                          Center(child: Text("No Itenaries added")),
+                        if (image.runtimeType == List &&
+                            (image as List).length > 1) ...[
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            "More Images",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          SizedBox(
+                            child: Wrap(
+                              spacing: SizeConfig.screenWidth! * .02,
+                              children: (image as List)
+                                  .sublist(1)
+                                  .map(
+                                    (e) => Image.memory(
+                                      base64Decode(e),
+                                      height: SizeConfig.screenWidth! * .4,
+                                      width: SizeConfig.screenWidth! * .4,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ],
                       ],
                     ],
                   ),

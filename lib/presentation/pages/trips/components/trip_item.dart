@@ -31,7 +31,7 @@ class TripItem extends StatelessWidget {
   final String description;
   final String title;
   final String date;
-  final String image;
+  final dynamic image;
   final String id;
   final List<dynamic> acceptedUid;
   final bool isHomeScreen;
@@ -76,7 +76,9 @@ class TripItem extends StatelessWidget {
                     image: DecorationImage(
                       image: MemoryImage(
                         base64Decode(
-                          image,
+                          image.runtimeType == String
+                              ? image
+                              : (image as List).first,
                         ),
                       ), //
                       fit: BoxFit.cover,

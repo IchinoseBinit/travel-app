@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,7 +22,7 @@ class TripPostScreen extends StatefulWidget {
 }
 
 class _TripPostScreenState extends State<TripPostScreen> {
-  final imageController = TextEditingController();
+  // final imageController = TextEditingController();
 
   final nameController = TextEditingController();
 
@@ -31,6 +32,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
   List<String> toBring = [];
+  List<String> images = [];
   Itenary? itenary;
 
   final formKey = GlobalKey<FormState>();
@@ -59,27 +61,37 @@ class _TripPostScreenState extends State<TripPostScreen> {
               ),
               Center(
                 child: SizedBox(
-                  height: SizeConfig.screenHeight! * .15,
-                  width: SizeConfig.screenWidth! * 1,
-                  child: imageController.text.isEmpty
-                      ? Column(
-                          children: [
-                            Icon(
-                              Icons.image,
-                              size: SizeConfig.screenHeight! * .12,
-                              color: kPrimaryColor,
+                    // height: SizeConfig.screenHeight! * .15,
+                    // width: SizeConfig.screenWidth! * 1,
+                    child: images.isEmpty
+                        ? Column(
+                            children: [
+                              Icon(
+                                Icons.image,
+                                size: SizeConfig.screenHeight! * .12,
+                                color: kPrimaryColor,
+                              ),
+                              Text(
+                                "Upload Image",
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
+                            ],
+                          )
+                        : SizedBox(
+                          child: Wrap(
+                              spacing: SizeConfig.screenWidth! * .02,
+                              children: images
+                                  .map(
+                                    (e) => Image.memory(
+                                      base64Decode(e),
+                                      height: SizeConfig.screenWidth! * .30,
+                                      width: SizeConfig.screenWidth! * .30,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                            Text(
-                              "Upload Image",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          ],
-                        )
-                      : Image.memory(
-                          base64Decode(imageController.text),
-                          fit: BoxFit.contain,
-                        ),
-                ),
+                        )),
               ),
               SizedBox(
                 height: SizeConfig.screenHeight! * .002,
@@ -132,7 +144,8 @@ class _TripPostScreenState extends State<TripPostScreen> {
               ),
               if (itenary != null || toBring.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 8.0),
                   child: Text("Itenary Data Saved"),
                 )
               else
@@ -154,9 +167,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
                     if (data != null) {
                       toBring = data[0];
                       itenary = data[1];
-                      setState(() {
-                        
-                      });
+                      setState(() {});
                     }
                   },
                   color: kPrimaryLightColor,
@@ -181,77 +192,23 @@ class _TripPostScreenState extends State<TripPostScreen> {
 
   Future<void> showBottomSheet(BuildContext context) async {
     final imagePicker = ImagePicker();
-
-    await showModalBottomSheet(
-      context: context,
-      builder: (_) => Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Choose a source",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight! * .002,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildChooseOptions(
-                  context,
-                  func: () async {
-                    final xFile =
-                        await imagePicker.pickImage(source: ImageSource.camera);
-                    if (xFile != null) {
-                      final int sizeInBytes = await xFile.length();
-                      final double sizeInMb = sizeInBytes / 1000000;
-                      if (sizeInMb > 1.0) {
-                        final compressedFile = await compressFile(xFile);
-                        if (compressedFile != null) {
-                          imageController.text = base64Encode(compressedFile);
-                        }
-                      } else {
-                        final unit8list = await xFile.readAsBytes();
-                        imageController.text = base64Encode(unit8list);
-                      }
-
-                      Navigator.pop(context);
-                    }
-                  },
-                  iconData: Icons.camera_outlined,
-                  label: "Camera",
-                ),
-                buildChooseOptions(
-                  context,
-                  func: () async {
-                    final xFile = await imagePicker.pickImage(
-                        source: ImageSource.gallery);
-                    if (xFile != null) {
-                      final int sizeInBytes = await xFile.length();
-                      final double sizeInMb = sizeInBytes / 1000000;
-                      if (sizeInMb > 1.0) {
-                        final compressedFile = await compressFile(xFile);
-                        if (compressedFile != null) {
-                          imageController.text = base64Encode(compressedFile);
-                        }
-                      } else {
-                        final unit8list = await xFile.readAsBytes();
-                        imageController.text = base64Encode(unit8list);
-                      }
-                      Navigator.pop(context);
-                    }
-                  },
-                  iconData: Icons.collections_outlined,
-                  label: "Gallery",
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+    final xFiles = await imagePicker.pickMultiImage();
+    if (xFiles != null) {
+      for (var xFile in xFiles) {
+        final int sizeInBytes = await xFile.length();
+        final double sizeInMb = sizeInBytes / 1000000;
+        if (sizeInMb > 1.0) {
+          final compressedFile = await compressFile(xFile);
+          if (compressedFile != null) {
+            images.add(base64Encode(compressedFile));
+          }
+        } else {
+          final unit8list = await xFile.readAsBytes();
+          images.add(base64Encode(unit8list));
+        }
+      }
+      setState(() {});
+    }
   }
 
   Column buildChooseOptions(
@@ -279,7 +236,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
   onSubmit(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       try {
-        if (imageController.text.isEmpty) {
+        if (images.isEmpty) {
           showToast("Please upload an image");
           return;
         } else if (latitudeController.text.isEmpty) {
@@ -294,7 +251,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
           "name": nameController.text,
           "description": descriptionController.text,
           "date": dateController.text,
-          "image": imageController.text,
+          "image": images,
           "latitude": latitudeController.text,
           "longitude": longitudeController.text,
           "acceptedUid": [],
