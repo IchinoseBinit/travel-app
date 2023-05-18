@@ -1,13 +1,10 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_app/domain/models/iternary.dart';
 import 'package:travel_app/infrastructure/services/firebase/firebase_manager.dart';
 import 'package:travel_app/presentation/pages/login-signup/constants.dart';
-import 'package:travel_app/utils/app_assets.dart';
+
 import 'custom_text.dart';
 import 'trip_item.dart';
 
@@ -62,8 +59,7 @@ class _BodyState extends State<Body> {
                         return ListView.separated(
                           itemBuilder: (context, index) {
                             // Showing trips data in the list
-                            // log(jsonEncode(data[index].data()));
-
+                            // Different trip card created according to data from firebase
                             return TripItem(
                               id: data[index].id,
                               title: data[index]["name"],
@@ -71,6 +67,7 @@ class _BodyState extends State<Body> {
                                   data[index]["description"].toString(),
                               image: data[index]["image"],
                               date: data[index]["date"],
+                              endDate: data[index]["endDate"],
                               acceptedUid: data[index]["acceptedUid"],
                               isHomeScreen: false,
                               toBring:

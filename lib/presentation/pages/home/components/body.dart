@@ -144,6 +144,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                                           data[index]["description"].toString(),
                                       image: data[index]["image"],
                                       date: data[index]["date"],
+                                      endDate: data[index]["endDate"],
                                       acceptedUid:
                                           data[index]["acceptedUid"] ?? [],
                                       toBring: (data[index].data() as Map)["toBring"] ?? [],

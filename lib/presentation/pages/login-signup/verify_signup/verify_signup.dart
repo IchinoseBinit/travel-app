@@ -26,6 +26,7 @@ class _VerifyRegisterScreenState extends State<VerifyRegisterScreen> {
   void initState() {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      // check the status of the user whether verified or not every 5 seconds
       await FirebaseAuth.instance.currentUser!.reload();
       final user = FirebaseAuth.instance.currentUser!;
 
@@ -87,6 +88,7 @@ class _VerifyRegisterScreenState extends State<VerifyRegisterScreen> {
                   RoundedButton(
                     press: () async {
                       await onSubmit(context);
+                      // Resend the email when the user clicks on it
                     },
                     text: "Resend Email",
                   ),

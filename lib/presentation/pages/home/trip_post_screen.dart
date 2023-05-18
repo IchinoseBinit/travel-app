@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +13,8 @@ import 'package:travel_app/utils/file_compressor.dart';
 import 'package:travel_app/utils/show_toast_message.dart';
 import 'package:travel_app/utils/size_config.dart';
 
+
+// Screen to post the data for the trip
 class TripPostScreen extends StatefulWidget {
   TripPostScreen({Key? key}) : super(key: key);
 
@@ -29,6 +30,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
   final descriptionController = TextEditingController();
 
   final dateController = TextEditingController();
+  final endDateController = TextEditingController();
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
   List<String> toBring = [];
@@ -114,8 +116,16 @@ class _TripPostScreenState extends State<TripPostScreen> {
                 height: SizeConfig.screenHeight! * .002,
               ),
               RoundedInputField(
-                hintText: "Date",
+                hintText: "Start Date",
                 controller: dateController,
+                icon: Icons.calendar_month_outlined,
+              ),
+              SizedBox(
+                height: SizeConfig.screenHeight! * .002,
+              ),
+              RoundedInputField(
+                hintText: "End Date",
+                controller: endDateController,
                 icon: Icons.calendar_month_outlined,
               ),
               SizedBox(
@@ -251,6 +261,7 @@ class _TripPostScreenState extends State<TripPostScreen> {
           "name": nameController.text,
           "description": descriptionController.text,
           "date": dateController.text,
+          "endDate": endDateController.text,
           "image": images,
           "latitude": latitudeController.text,
           "longitude": longitudeController.text,

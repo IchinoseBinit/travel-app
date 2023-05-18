@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:travel_app/domain/models/iternary.dart';
 import 'package:travel_app/infrastructure/services/firebase/firebase_manager.dart';
 import 'package:travel_app/presentation/pages/chats/chat_screen.dart';
@@ -14,6 +13,8 @@ import 'package:travel_app/utils/show_toast_message.dart';
 import 'package:travel_app/utils/size_config.dart';
 import 'package:travel_app/utils/text_styles.dart';
 
+// Items for trips posted
+
 class TripItem extends StatelessWidget {
   const TripItem({
     Key? key,
@@ -21,6 +22,7 @@ class TripItem extends StatelessWidget {
     required this.title,
     required this.description,
     required this.date,
+    this.endDate,
     required this.image,
     required this.acceptedUid,
     this.isHomeScreen = true,
@@ -31,6 +33,7 @@ class TripItem extends StatelessWidget {
   final String description;
   final String title;
   final String date;
+  final String? endDate;
   final dynamic image;
   final String id;
   final List<dynamic> acceptedUid;
@@ -50,6 +53,7 @@ class TripItem extends StatelessWidget {
               description: description,
               title: title,
               date: date,
+              endDate: endDate,
               image: image,
               toBring: toBring,
               itenary: itenary,
@@ -102,6 +106,17 @@ class TripItem extends StatelessWidget {
                             color: AppColors.black,
                           ),
                         ),
+                        if (endDate != null) ...[
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            endDate!, //
+                            style: TextStyles.normal.copyWith(
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ]
                       ],
                     )),
                 Padding(

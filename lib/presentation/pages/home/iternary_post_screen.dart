@@ -6,6 +6,8 @@ import 'package:travel_app/presentation/pages/login-signup/constants.dart';
 import 'package:travel_app/utils/app_colors.dart';
 import 'package:travel_app/utils/size_config.dart';
 
+
+// Screen to post itenary
 class ItenaryPostScreen extends StatefulWidget {
   const ItenaryPostScreen({Key? key, required this.date}) : super(key: key);
   final String date;
@@ -70,6 +72,7 @@ class _ItenaryPostScreenState extends State<ItenaryPostScreen> {
                             final item = await addItem();
                             if (item != null) {
                               toBring.add(item);
+                              // Adds the item to the toBring list
                               setState(() {});
                             }
                           },
@@ -124,9 +127,13 @@ class _ItenaryPostScreenState extends State<ItenaryPostScreen> {
                           padding: EdgeInsets.zero,
                           onPressed: () async {
                             final item = await addItenary();
+                              // Calls the bottomsheet to get input for itenary
+
                             if (item != null) {
                               itenary.details.add(item);
                               setState(() {});
+                              // Adds the item to the toBring list
+
                             }
                           },
                           icon: Icon(

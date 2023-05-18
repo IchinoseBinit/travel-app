@@ -13,6 +13,7 @@ class TripDetail extends StatelessWidget {
     required this.description,
     required this.title,
     required this.date,
+    this.endDate,
     required this.image,
     required this.toBring,
     required this.itenary,
@@ -21,14 +22,14 @@ class TripDetail extends StatelessWidget {
   final String description;
   final String title;
   final String date;
+  final String? endDate;
   final dynamic image;
   final List<dynamic> toBring;
   final Itenary? itenary;
 
   @override
   Widget build(BuildContext context) {
-    print(itenary);
-    print("hello");
+    // Trip detail screen for showing the details of the trip
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -87,6 +88,17 @@ class TripDetail extends StatelessWidget {
                                   color: AppColors.black,
                                 ),
                               ),
+                              if (endDate != null) ...[
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  endDate!, //
+                                  style: TextStyles.normal.copyWith(
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ]
                             ],
                           )),
                       Padding(
